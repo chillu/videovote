@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "standard": "^3.0.0"
+  },
+  "scripts": {
+    "test": "standard"
+  },
+  "standard": {
+    "ignore": [
+      "packages"
+    ]
+  }
+}
