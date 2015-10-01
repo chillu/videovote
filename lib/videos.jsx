@@ -15,11 +15,11 @@ Meteor.methods({
         done(err, data)
       })
     })
-    
+
     if(response.error) {
       throw new Meteor.Error('No video found')
     }
-    
+
     embedData = response.result;
 
     // Check for dupllicates
@@ -42,5 +42,16 @@ Meteor.methods({
     id = Videos.insert(video)
 
     return id;
+  },
+  'videos/vote': (id) => {
+    var video = Videos.findOne({_id: id})
+
+    if(!video) {
+      throw new Meteor.Error('Video not found')
+    }
+
+    Videos.update(id, {
+      $addToSet: {votes: [{userId: '123'}]}
+    })
   }
 })

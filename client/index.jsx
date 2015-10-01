@@ -3,7 +3,7 @@ App = React.createClass({
 
   getMeteorData() {
     var subHandle = Meteor.subscribe('videos');
-    
+
     return {
       videos: Videos.find({}).fetch(),
       videosLoading: ! subHandle.ready()
@@ -53,7 +53,7 @@ VideoForm = React.createClass({
 
     event.preventDefault()
     Session.set('isSubmitting', true)
-    
+
     url = React.findDOMNode(this.refs.textInput).value.trim()
     Meteor.call('videos/add', url, (err, res) => {
       Session.set('isSubmitting', false)
@@ -76,14 +76,14 @@ VideoForm = React.createClass({
           ref="textInput"
           required
           placeholder="Add a video URL" />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="btn btn-primary"
           disabled={this.data.isSubmitting ? 'disabled' : ''}
         >
           Add
         </button>
-      </form> 
+      </form>
     )
   }
 })
@@ -93,6 +93,14 @@ VideoItem = React.createClass({
     // This component gets the video to display through a React prop.
     // We can use propTypes to indicate it is required
     video: React.PropTypes.object.isRequired
+  },
+  handleVote(event) {
+    Meteor.call('videos/vote', this.props.video._id, (err, res) => {
+      if(err) {
+        alert(err.error)
+        return
+      }
+    })
   },
   render() {
     return (
@@ -105,6 +113,11 @@ VideoItem = React.createClass({
         <div className="media-body">
           <h4 className="media-heading"><a href={this.props.video.url}>{this.props.video.title}</a></h4>
           <p>{this.props.video.description}</p>
+          <form onSubmit={this.handleVote}>
+            <button className="btn btn-primary" type="button">
+              Vote <span className="badge">{this.props.video.votes}</span>
+            </button>
+          </form>
         </div>
       </li>
     )
