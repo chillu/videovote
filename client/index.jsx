@@ -18,18 +18,18 @@ App = React.createClass({
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <header className="page-header">
+      <div className='container'>
+        <div className='row'>
+          <header className='page-header'>
             <h1>Videos</h1>
           </header>
         </div>
-        <div className="row">
+        <div className='row'>
           <VideoForm />
         </div>
-        <div className="row panel panel-default">
-          <div className="panel-body">
-            <ul className="media-list">
+        <div className='row panel panel-default'>
+          <div className='panel-body'>
+            <ul className='media-list'>
               {this.renderVideos()}
             </ul>
           </div>
@@ -69,16 +69,16 @@ VideoForm = React.createClass({
 
   render() {
     return (
-      <form className="new-video form-inline" onSubmit={this.handleSubmit} >
+      <form className='new-video form-inline' onSubmit={this.handleSubmit} >
         <input
-          type="text"
-          className="form-control"
-          ref="textInput"
+          type='text'
+          className='form-control'
+          ref='textInput'
           required
-          placeholder="Add a video URL" />
+          placeholder='Add a video URL' />
         <button
-          type="submit"
-          className="btn btn-primary"
+          type='submit'
+          className='btn btn-primary'
           disabled={this.data.isSubmitting ? 'disabled' : ''}
         >
           Add
@@ -104,18 +104,18 @@ VideoItem = React.createClass({
   },
   render() {
     return (
-      <li className="media">
-        <div className="media-left">
-          <a href="">
-            <img src={this.props.video.thumbnailUrl} alt={this.props.video.title} className="media-object" />
+      <li className='media'>
+        <div className='media-left'>
+          <a href=''>
+            <img src={this.props.video.thumbnailUrl} alt={this.props.video.title} className='media-object' />
           </a>
         </div>
-        <div className="media-body">
-          <h4 className="media-heading"><a href={this.props.video.url}>{this.props.video.title}</a></h4>
+        <div className='media-body'>
+          <h4 className='media-heading'><a href={this.props.video.url}>{this.props.video.title}</a></h4>
           <p>{this.props.video.description}</p>
           <form onSubmit={this.handleVote}>
-            <button className="btn btn-primary" type="button">
-              Vote <span className="badge">{this.props.video.votes}</span>
+            <button className='btn btn-primary' type='button'>
+              Vote <span className='badge'>{this.props.video.votes}</span>
             </button>
           </form>
         </div>
