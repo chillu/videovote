@@ -6,7 +6,44 @@ App = React.createClass({
     
     return {
       videos: Videos.find({}).fetch(),
-      videosLoading: ! subHandle.ready(),
+      videosLoading: ! subHandle.ready()
+    }
+  },
+
+  renderVideos() {
+    return this.data.videos.map((video) => {
+      return <VideoItem key={video._id} video={video} />
+    })
+  },
+
+  render() {
+    return (
+      <div className="container">
+        <div className="row">
+          <header className="page-header">
+            <h1>Videos</h1>
+          </header>
+        </div>
+        <div className="row">
+          <VideoForm />
+        </div>
+        <div className="row panel panel-default">
+          <div className="panel-body">
+            <ul className="media-list">
+              {this.renderVideos()}
+            </ul>
+          </div>
+        </div>
+      </div>
+    )
+  }
+})
+
+VideoForm = React.createClass({
+  mixins: [ReactMeteorData],
+
+  getMeteorData() {
+    return {
       isSubmitting: Session.get('isSubmitting')
     }
   },
@@ -30,50 +67,28 @@ App = React.createClass({
     React.findDOMNode(this.refs.textInput).value = ""
   },
 
-  renderVideos() {
-    return this.data.videos.map((video) => {
-      return <Video key={video._id} video={video} />
-    })
-  },
-
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <header className="page-header">
-            <h1>Videos</h1>
-          </header>
-        </div>
-        <div className="row">
-          <form className="new-video form-inline" onSubmit={this.handleSubmit} >
-            <input
-              type="text"
-              className="form-control"
-              ref="textInput"
-              required
-              placeholder="Add a video URL" />
-            <button 
-              type="submit" 
-              className="btn btn-primary"
-              disabled={this.data.isSubmitting ? 'disabled' : ''}
-            >
-              Add
-            </button>
-          </form>
-        </div>
-        <div className="row panel panel-default">
-          <div className="panel-body">
-            <ul className="media-list">
-              {this.renderVideos()}
-            </ul>
-          </div>
-        </div>
-      </div>
+      <form className="new-video form-inline" onSubmit={this.handleSubmit} >
+        <input
+          type="text"
+          className="form-control"
+          ref="textInput"
+          required
+          placeholder="Add a video URL" />
+        <button 
+          type="submit" 
+          className="btn btn-primary"
+          disabled={this.data.isSubmitting ? 'disabled' : ''}
+        >
+          Add
+        </button>
+      </form> 
     )
   }
 })
 
-Video = React.createClass({
+VideoItem = React.createClass({
   propTypes: {
     // This component gets the video to display through a React prop.
     // We can use propTypes to indicate it is required
