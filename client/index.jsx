@@ -127,6 +127,16 @@ VideoItem = React.createClass({
 })
 
 Meteor.startup(function () {
+  if (Meteor.users.find().count() === 0) {
+    Meteor.loginWithGithub({
+        requestPermissions: ['user'],
+        loginStyle: "redirect"
+    }, function (err) {
+          if (err)
+            Session.set('errorMessage', err.reason || 'Unknown error');
+    });
+  }
+
   // Use Meteor.startup to render the component after the page is ready
   React.render(<App />, document.getElementById("app"))
 })

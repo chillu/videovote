@@ -38,6 +38,7 @@ Meteor.methods({
       html: embedData.html,
       duration: embedData.duration,
       description: embedData.description,
+      userId: Meteor.userId(),
       votes: []
     }
     id = Videos.insert(video)
@@ -55,7 +56,7 @@ Meteor.methods({
       $addToSet: {votes: [{
         // userId: Session.get('userId')
         // TODO Use GUID created on client
-        userId: Guid.create()
+        userId: Meteor.userId()
       }]}
     })
   }

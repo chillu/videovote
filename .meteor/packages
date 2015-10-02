@@ -27,3 +27,5 @@ check
 
 npm-container
 adain:meteor-guid
+accounts-github
+service-configuration
