@@ -95,6 +95,8 @@ VideoItem = React.createClass({
     video: React.PropTypes.object.isRequired
   },
   handleVote(event) {
+    event.preventDefault()
+
     Meteor.call('videos/vote', this.props.video._id, (err, res) => {
       if(err) {
         alert(err.error)
@@ -114,8 +116,8 @@ VideoItem = React.createClass({
           <h4 className='media-heading'><a href={this.props.video.url}>{this.props.video.title}</a></h4>
           <p>{this.props.video.description}</p>
           <form onSubmit={this.handleVote}>
-            <button className='btn btn-primary' type='button'>
-              Vote <span className='badge'>{this.props.video.votes}</span>
+            <button className='btn btn-primary' type='submit'>
+              Vote <span className='badge'>{this.props.video.votes.length}</span>
             </button>
           </form>
         </div>
