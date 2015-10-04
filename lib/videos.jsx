@@ -9,6 +9,10 @@ Meteor.methods({
       return
     }
 
+    if(!Meteor.user()) {
+      throw new Meteor.Error('Requires user login')
+    }
+
     service = Meteor.npmRequire('oembed-node').init();
     response = Async.runSync(function(done) {
       service.get({url: url}, function(err, data) {
@@ -50,6 +54,10 @@ Meteor.methods({
 
     if(!video) {
       throw new Meteor.Error('Video not found')
+    }
+
+    if(!Meteor.user()) {
+      throw new Meteor.Error('Requires user login')
     }
 
     Videos.update(id, {

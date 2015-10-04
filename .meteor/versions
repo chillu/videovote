@@ -28,6 +28,7 @@ ecmascript@0.1.5
 ecmascript-collections@0.1.6
 ejson@1.0.7
 fastclick@1.0.7
+fortawesome:fontawesome@4.4.0
 fourseven:scss@3.3.3_3
 geojson-utils@1.0.4
 github@1.1.4

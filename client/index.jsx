@@ -6,13 +6,24 @@ App = React.createClass({
 
     return {
       videos: Videos.find({}).fetch(),
-      videosLoading: ! subHandle.ready()
+      videosLoading: ! subHandle.ready(),
+      user: Meteor.user()
     }
+  },
+
+  login() {
+    Meteor.loginWithGithub({
+        requestPermissions: ['user'],
+        loginStyle: "redirect"
+    }, function (err) {
+          if (err)
+            Session.set('errorMessage', err.reason || 'Unknown error');
+    });
   },
 
   renderVideos() {
     return this.data.videos.map((video) => {
-      return <VideoItem key={video._id} video={video} />
+      return <VideoItem key={video._id} video={video} user={this.data.user}/>
     })
   },
 
@@ -25,7 +36,19 @@ App = React.createClass({
           </header>
         </div>
         <div className='row'>
-          <VideoForm />
+          {this.data.user ?
+            <VideoForm />
+            :
+            <p>
+              <a
+                className='btn btn-block btn-github'
+                onClick={this.login}
+              >
+                <i className='fa fa-github'></i>
+                &nbsp;Login with Github
+              </a>
+            </p>
+          }
         </div>
         <div className='row panel panel-default'>
           <div className='panel-body'>
@@ -90,9 +113,8 @@ VideoForm = React.createClass({
 
 VideoItem = React.createClass({
   propTypes: {
-    // This component gets the video to display through a React prop.
-    // We can use propTypes to indicate it is required
-    video: React.PropTypes.object.isRequired
+    video: React.PropTypes.object.isRequired,
+    user: React.PropTypes.object.isRequired
   },
   handleVote(event) {
     event.preventDefault()
@@ -115,11 +137,15 @@ VideoItem = React.createClass({
         <div className='media-body'>
           <h4 className='media-heading'><a href={this.props.video.url}>{this.props.video.title}</a></h4>
           <p>{this.props.video.description}</p>
-          <form onSubmit={this.handleVote}>
-            <button className='btn btn-primary' type='submit'>
-              Vote <span className='badge'>{this.props.video.votes.length}</span>
-            </button>
-          </form>
+          {this.props.user ?
+            <form onSubmit={this.handleVote}>
+              <button className='btn btn-primary' type='submit'>
+                Vote <span className='badge'>{this.props.video.votes ? this.props.video.votes.length : 0}</span>
+              </button>
+            </form>
+            :
+            ''
+          }
         </div>
       </li>
     )
@@ -127,16 +153,5 @@ VideoItem = React.createClass({
 })
 
 Meteor.startup(function () {
-  if (Meteor.users.find().count() === 0) {
-    Meteor.loginWithGithub({
-        requestPermissions: ['user'],
-        loginStyle: "redirect"
-    }, function (err) {
-          if (err)
-            Session.set('errorMessage', err.reason || 'Unknown error');
-    });
-  }
-
-  // Use Meteor.startup to render the component after the page is ready
   React.render(<App />, document.getElementById("app"))
 })
