@@ -29,29 +29,35 @@ App = React.createClass({
 
   render() {
     return (
-      <div className='container'>
-        <div className='row'>
-          <header className='page-header'>
-            <h1>Videos</h1>
-          </header>
+      <div className='container-fluid'>
+        <header className='page-header'>
+          <i class="fa fa-television"></i>
+          <h1>Lunch &amp; Learn Videos</h1>
+          <p className='lead'>
+            Flux. Websockets. PHP7. Lean UX. So many new ideas, so little time!
+            Use your lunch break as a mini-conference, and watch talks with your colleagues.
+            Check video suggestions here, or login to vote and add your own video.
+          </p>
+        </header>
+        <div className='row add-or-login'>
+          <div className='col-md-12'>
+            {this.data.user ?
+              <VideoForm />
+              :
+              <p>
+                <a
+                  className='btn btn-block btn-github'
+                  onClick={this.login}
+                >
+                  <i className='fa fa-github'></i>
+                  &nbsp;Login with Github
+                </a>
+              </p>
+            }
+          </div>
         </div>
-        <div className='row'>
-          {this.data.user ?
-            <VideoForm />
-            :
-            <p>
-              <a
-                className='btn btn-block btn-github'
-                onClick={this.login}
-              >
-                <i className='fa fa-github'></i>
-                &nbsp;Login with Github
-              </a>
-            </p>
-          }
-        </div>
-        <div className='row panel panel-default'>
-          <div className='panel-body'>
+        <div className='row padding'>
+          <div className='col-md-12'>
             <ul className='media-list'>
               {this.renderVideos()}
             </ul>
@@ -92,20 +98,24 @@ VideoForm = React.createClass({
 
   render() {
     return (
-      <form className='new-video form-inline' onSubmit={this.handleSubmit} >
-        <input
-          type='text'
-          className='form-control'
-          ref='textInput'
-          required
-          placeholder='Add a video URL' />
-        <button
-          type='submit'
-          className='btn btn-primary'
-          disabled={this.data.isSubmitting ? 'disabled' : ''}
-        >
-          Add
-        </button>
+      <form className='new-video' onSubmit={this.handleSubmit} >
+        <div className='input-group'>
+          <input
+            type='text'
+            className='form-control'
+            ref='textInput'
+            required
+            placeholder='Add a video URL' />
+          <span className='input-group-btn'>
+            <button
+              type='button'
+              className='btn btn-primary'
+              disabled={this.data.isSubmitting ? 'disabled' : ''}
+            >
+              Add
+            </button>
+          </span>
+        </div>
       </form>
     )
   }
@@ -128,25 +138,20 @@ VideoItem = React.createClass({
   },
   render() {
     return (
-      <li className='media'>
-        <div className='media-left'>
-          <a href=''>
-            <img src={this.props.video.thumbnailUrl} alt={this.props.video.title} className='media-object' />
-          </a>
-        </div>
+      <li className='media media-video'>
         <div className='media-body'>
           <h4 className='media-heading'><a href={this.props.video.url}>{this.props.video.title}</a></h4>
           <p>{this.props.video.description}</p>
-          {this.props.user ?
-            <form onSubmit={this.handleVote}>
-              <button className='btn btn-primary' type='submit'>
-                Vote <span className='badge'>{this.props.video.votes ? this.props.video.votes.length : 0}</span>
-              </button>
-            </form>
-            :
-            ''
-          }
         </div>
+        {this.props.user ?
+          <form className='media-right' onSubmit={this.handleVote}>
+            <button className='btn btn-primary' type='submit'>
+              Vote <span className='badge'>{this.props.video.votes ? this.props.video.votes.length : 0}</span>
+            </button>
+          </form>
+          :
+          ''
+        }
       </li>
     )
   }

@@ -1,7 +1,14 @@
-.media {
-	img {
-		max-width: 140px;
-	}
+body {
+	background-color: #333;
+	color: #fff;
+}
+
+.container-fluid {
+	max-width: 800px;
+}
+
+.add-or-login {
+	margin-bottom: 20px;
 }
 
 .btn-github {
