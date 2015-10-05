@@ -27,7 +27,6 @@ Meteor.methods({
     embedData = response.result;
 
     // Check for dupllicates
-    console.log(embedData)
     if(Videos.findOne({url: embedData.video_url})) {
       throw new Meteor.Error('Video already exists')
     }
@@ -43,7 +42,10 @@ Meteor.methods({
       duration: embedData.duration,
       description: embedData.description,
       userId: Meteor.userId(),
-      votes: []
+      votes: [
+        // A user should really vote for their own addition
+        {userId: Meteor.userId()}
+      ]
     }
     id = Videos.insert(video)
 
@@ -61,9 +63,10 @@ Meteor.methods({
     }
 
     Videos.update(id, {
+      $inc: {
+        votesCount: 1
+      },
       $addToSet: {votes: [{
-        // userId: Session.get('userId')
-        // TODO Use GUID created on client
         userId: Meteor.userId()
       }]}
     })
