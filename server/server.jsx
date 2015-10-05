@@ -1,5 +1,5 @@
 Meteor.publish('videos', function() {
-  return Videos.find();
+  return Videos.find({}, {sort: ['voteCount', 'desc']});
 });
 
 Meteor.startup(function() {
