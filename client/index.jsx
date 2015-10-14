@@ -140,7 +140,12 @@ VideoItem = React.createClass({
     return (
       <li className='media media-video'>
         <div className='media-body'>
-          <h4 className='media-heading'><a href={this.props.video.url}>{this.props.video.title}</a></h4>
+          <h4 className='media-heading'>
+            <a href={this.props.video.url}>
+              {this.props.video.title}
+              &nbsp;({this.props.video.durationMins} mins)
+            </a>
+          </h4>
           <p>{this.props.video.description}</p>
         </div>
         {this.props.user ?

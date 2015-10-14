@@ -2,7 +2,7 @@ Videos = new Mongo.Collection('videos');
 
 Meteor.methods({
   'videos/add': (url) => {
-    var response, embedData, video, service, existing;
+    var response, embedData, video, oembedService, googleService, existing;
 
     // oEmbed needs to run on server
     if(!Meteor.isServer) {
@@ -13,9 +13,9 @@ Meteor.methods({
       throw new Meteor.Error('Requires user login')
     }
 
-    service = Meteor.npmRequire('oembed-node').init();
+    oembedService = Meteor.npmRequire('oembed-node').init();
     response = Async.runSync(function(done) {
-      service.get({url: url}, function(err, data) {
+      oembedService.get({url: url}, function(err, data) {
         done(err, data)
       })
     })
@@ -26,10 +26,32 @@ Meteor.methods({
 
     embedData = response.result;
 
-    // Check for dupllicates
+    // Check for duplicates
     if(Videos.findOne({url: embedData.video_url})) {
       throw new Meteor.Error('Video already exists')
     }
+
+    // Grab video metadata
+    // TODO Support different services
+    videoId = embedData.video_url.match(/.*\/(.*)/)[1]
+    googleService = Meteor.npmRequire('googleapis')
+    googleResponse = Async.runSync(function(done) {
+      googleService.youtube('v3').videos.list(
+        {
+          auth: Meteor.settings.google.apiKey,
+          part: 'contentDetails',
+          maxResults: 1,
+          id: videoId
+        },
+        function(err, data) {
+          done(err, data)
+        }
+      )
+    })
+    if(googleResponse.error) {
+      throw new Meteor.Error('No video found')
+    }
+    var durationMins = moment.duration(googleResponse.result.items[0].contentDetails.duration).minutes()
 
     // Insert video
     video = {
@@ -39,7 +61,7 @@ Meteor.methods({
       thumbnailHeight: embedData.thumbnail_height,
       title: embedData.title,
       html: embedData.html,
-      duration: embedData.duration,
+      durationMins: durationMins,
       description: embedData.description,
       userId: Meteor.userId(),
       votes: [

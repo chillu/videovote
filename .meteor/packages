@@ -30,3 +30,4 @@ adain:meteor-guid
 accounts-github
 service-configuration
 fortawesome:fontawesome
+momentjs:moment

@@ -34,13 +34,19 @@ Create a `settings.json` file with the following content:
   },
   "github": {
     "secret": ""
+  },
+  "google": {
+    "apiKey": ""
   }
 }
+
 ```
 
-Create a new [Github Developer Application](https://github.com/settings/developers)
-and fill in the `clientId` and `secret` values. Use the base URL of your application
-as the callback URL.
+ * Create a new [Github Developer Application](https://github.com/settings/developers)
+   and fill in the `public.github.clientId` and `github.secret` values. Use the base URL of your application
+   as the callback URL.
+ * Create a [Google Developer API Key](https://developers.google.com/youtube/registering_an_application#Create_API_Keys)
+    as a "server key" with access to the Youtube API
 
 ## License
 
