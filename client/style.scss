@@ -3,8 +3,25 @@ body {
 	color: #fff;
 }
 
+.logo {
+	font-size: 36px;
+	float: left;
+	margin-right: 0.5em;
+}
+
 .container-fluid {
 	max-width: 800px;
+}
+
+.votes {
+	.user {
+		&:before {
+				content:',\0000a0'; /* Non-breaking space */
+		}
+		&:first-child:before {
+			content: normal;
+		}
+	}
 }
 
 .add-or-login {

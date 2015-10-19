@@ -136,6 +136,16 @@ VideoItem = React.createClass({
       }
     })
   },
+  renderVotes() {
+    var votes = this.props.video.votes, votes;
+    if(votes) {
+      return votes.map((vote) => {
+        return vote.userId ? <UserItem key={vote.userId} username={vote.username} /> : null
+      })
+    } else {
+      return null
+    }
+  },
   render() {
     return (
       <li className='media media-video'>
@@ -146,7 +156,11 @@ VideoItem = React.createClass({
               &nbsp;({this.props.video.durationMins} mins)
             </a>
           </h4>
-          <p>{this.props.video.description}</p>
+          <p>
+            {this.props.video.description}
+            {this.props.video.votes ? 'Voted by: ' : ''}
+            <span className='votes'>{this.props.video.votes ? this.renderVotes() : ''}</span>
+          </p>
         </div>
         {this.props.user ?
           <form className='media-right' onSubmit={this.handleVote}>
@@ -158,6 +172,24 @@ VideoItem = React.createClass({
           ''
         }
       </li>
+    )
+  }
+})
+
+UserItem = React.createClass({
+  propTypes: {
+    username: React.PropTypes.string.isRequired
+  },
+  getProfileUrl() {
+    return 'https://github.com/' + this.props.username;
+  },
+  render() {
+    return (
+      <span className='user'>
+        <a href={this.getProfileUrl()}>
+          {this.props.username}
+        </a>
+      </span>
     )
   }
 })

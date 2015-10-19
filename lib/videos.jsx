@@ -66,7 +66,8 @@ Meteor.methods({
       userId: Meteor.userId(),
       votes: [
         // A user should really vote for their own addition
-        {userId: Meteor.userId()}
+        // TODO Figure out how to retrieve "protected" values from user objects on client
+        {userId: Meteor.userId(), username: Meteor.user().services.github.username}
       ]
     }
     id = Videos.insert(video)
