@@ -1,35 +1,41 @@
-/* global Meteor, Async */
+/* global Meteor, Async, Videos, VideoDataServiceFactory */
 
-Videos = new Mongo.Collection('videos');
+Videos = new Mongo.Collection('videos')
 
 Meteor.methods({
   'videos/add': (url) => {
-    var response, embedData, video, oembedService, videoDataService, duration, existing;
+    var response
+    var embedData
+    var video
+    var videoId
+    var oembedService
+    var videoDataService
+    var durationMins
 
     // oEmbed needs to run on server
-    if(!Meteor.isServer) {
+    if (!Meteor.isServer) {
       return
     }
 
-    if(!Meteor.user()) {
+    if (!Meteor.user()) {
       throw new Meteor.Error('Requires user login')
     }
 
-    oembedService = Meteor.npmRequire('oembed-node').init();
-    response = Async.runSync(function(done) {
-      oembedService.get({url: url}, function(err, data) {
+    oembedService = Meteor.npmRequire('oembed-node').init()
+    response = Async.runSync((done) => {
+      oembedService.get({url: url}, (err, data) => {
         done(err, data)
       })
     })
 
-    if(response.error) {
+    if (response.error) {
       throw new Meteor.Error('No video found')
     }
 
     embedData = response.result
 
     // Check for duplicates
-    if(Videos.findOne({url: embedData.video_url})) {
+    if (Videos.findOne({url: embedData.video_url})) {
       throw new Meteor.Error('Video already exists')
     }
 
@@ -37,7 +43,7 @@ Meteor.methods({
     videoDataService = VideoDataServiceFactory
       .createFromProviderName(embedData.provider_name)
 
-    if(!videoDataService) {
+    if (!videoDataService) {
       throw new Meteor.Error('Video cannot be processed')
     }
 
@@ -63,22 +69,20 @@ Meteor.methods({
         }
       ]
     }
-    id = Videos.insert(video)
-
-    return id;
+    return Videos.insert(video)
   },
   'videos/vote': (id) => {
     var video = Videos.findOne({_id: id})
 
-    if(!video) {
+    if (!video) {
       throw new Meteor.Error('Video not found')
     }
 
-    if(!Meteor.user()) {
+    if (!Meteor.user()) {
       throw new Meteor.Error('Requires user login')
     }
 
-    if(video.votes && video.votes.filter((vote) => vote.userId === Meteor.userId())) {
+    if (video.votes && video.votes.filter((vote) => vote.userId === Meteor.userId())) {
       return
     }
 

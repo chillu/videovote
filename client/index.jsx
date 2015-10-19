@@ -1,33 +1,37 @@
+/* global Meteor, ReactMeteorData, Session, App, Videos, VideoForm, VideoItem, React, UserItem, window */
+
 App = React.createClass({
   mixins: [ReactMeteorData],
 
-  getMeteorData() {
-    var subHandle = Meteor.subscribe('videos');
+  getMeteorData () {
+    var subHandle = Meteor.subscribe('videos')
 
     return {
       videos: Videos.find({}).fetch(),
-      videosLoading: ! subHandle.ready(),
+      videosLoading: !subHandle.ready(),
       user: Meteor.user()
     }
   },
 
-  login() {
+  login () {
     Meteor.loginWithGithub({
-        requestPermissions: ['user'],
-        loginStyle: "redirect"
+      requestPermissions: ['user'],
+      loginStyle: 'redirect'
     }, function (err) {
-          if (err)
-            Session.set('errorMessage', err.reason || 'Unknown error');
-    });
+      if (err) {
+        Session.set('errorMessage', err.reason || 'Unknown error')
+      }
+    })
+  },
   },
 
-  renderVideos() {
+  renderVideos () {
     return this.data.videos.map((video) => {
       return <VideoItem key={video._id} video={video} user={this.data.user}/>
     })
   },
 
-  render() {
+  render () {
     return (
       <div className='container-fluid'>
         <header className='page-header'>
@@ -41,10 +45,9 @@ App = React.createClass({
         </header>
         <div className='row add-or-login'>
           <div className='col-md-12'>
-            {this.data.user ?
-              <VideoForm />
-              :
-              <p>
+            {this.data.user
+              ? <VideoForm />
+              : <p>
                 <a
                   className='btn btn-block btn-github'
                   onClick={this.login}
@@ -71,14 +74,14 @@ App = React.createClass({
 VideoForm = React.createClass({
   mixins: [ReactMeteorData],
 
-  getMeteorData() {
+  getMeteorData () {
     return {
       isSubmitting: Session.get('isSubmitting')
     }
   },
 
-  handleSubmit(event) {
-    var url;
+  handleSubmit (event) {
+    var url
 
     event.preventDefault()
     Session.set('isSubmitting', true)
@@ -86,17 +89,17 @@ VideoForm = React.createClass({
     url = React.findDOMNode(this.refs.textInput).value.trim()
     Meteor.call('videos/add', url, (err, res) => {
       Session.set('isSubmitting', false)
-      if(err) {
-        alert(err.error)
+      if (err) {
+        window.alert(err.error)
         return
       }
     })
 
     // Clear form
-    React.findDOMNode(this.refs.textInput).value = ""
+    React.findDOMNode(this.refs.textInput).value = ''
   },
 
-  render() {
+  render () {
     return (
       <form className='new-video' onSubmit={this.handleSubmit} >
         <div className='input-group'>
@@ -127,19 +130,19 @@ VideoItem = React.createClass({
     video: React.PropTypes.object.isRequired,
     user: React.PropTypes.object.isRequired
   },
-  handleVote(event) {
+  handleVote (event) {
     event.preventDefault()
 
     Meteor.call('videos/vote', this.props.video._id, (err, res) => {
-      if(err) {
-        alert(err.error)
+      if (err) {
+        window.alert(err.error)
         return
       }
     })
   },
-  renderVotes() {
-    var votes = this.props.video.votes, votes;
-    if(votes) {
+  renderVotes () {
+    var votes = this.props.video.votes
+    if (votes) {
       return votes.map((vote) => {
         return vote.userId ? <UserItem key={vote.userId} username={vote.username} /> : null
       })
@@ -147,7 +150,7 @@ VideoItem = React.createClass({
       return null
     }
   },
-  render() {
+  render () {
     return (
       <li className='media media-video'>
         <div className='media-body'>
@@ -163,14 +166,13 @@ VideoItem = React.createClass({
             <span className='votes'>{this.props.video.votes ? this.renderVotes() : ''}</span>
           </p>
         </div>
-        {this.props.user ?
-          <form className='media-right' onSubmit={this.handleVote}>
+        {this.props.user
+          ? <form className='media-right' onSubmit={this.handleVote}>
             <button className='btn btn-primary' type='submit'>
               Vote <span className='badge'>{this.props.video.votes ? this.props.video.votes.length : 0}</span>
             </button>
           </form>
-          :
-          ''
+          : ''
         }
       </li>
     )
@@ -181,10 +183,10 @@ UserItem = React.createClass({
   propTypes: {
     username: React.PropTypes.string.isRequired
   },
-  getProfileUrl() {
-    return 'https://github.com/' + this.props.username;
+  getProfileUrl () {
+    return 'https://github.com/' + this.props.username
   },
-  render() {
+  render () {
     return (
       <span className='user'>
         <a href={this.getProfileUrl()}>
@@ -195,8 +197,9 @@ UserItem = React.createClass({
   }
 })
 
-Meteor.subscribe("userData")
+Session.setDefault('sort', 'createdAt')
+Meteor.subscribe('userData')
 
 Meteor.startup(function () {
-  React.render(<App />, document.getElementById("app"))
+  React.render(<App />, document.getElementById('app'))
 })

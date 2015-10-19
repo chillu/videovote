@@ -58,6 +58,6 @@ VideoDataServiceFactory = {
    */
   createFromProviderName (name) {
     var Service = this.services[name]
-    return Service ? new Service : null
+    return Service ? new Service() : null
   }
 }
