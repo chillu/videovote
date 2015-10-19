@@ -194,6 +194,8 @@ UserItem = React.createClass({
   }
 })
 
+Meteor.subscribe("userData")
+
 Meteor.startup(function () {
   React.render(<App />, document.getElementById("app"))
 })

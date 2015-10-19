@@ -65,9 +65,12 @@ Meteor.methods({
       description: embedData.description,
       userId: Meteor.userId(),
       votes: [
-        // A user should really vote for their own addition
-        // TODO Figure out how to retrieve "protected" values from user objects on client
-        {userId: Meteor.userId(), username: Meteor.user().services.github.username}
+        {
+          // A user should really vote for their own addition
+          userId: Meteor.userId(),
+          // TODO Figure out how to retrieve "protected" values from user objects on client
+          username: Meteor.user().services.github.username
+        }
       ]
     }
     id = Videos.insert(video)
@@ -85,13 +88,19 @@ Meteor.methods({
       throw new Meteor.Error('Requires user login')
     }
 
+    if(video.votes && video.votes.filter((vote) => vote.userId === Meteor.userId())) {
+      return
+    }
+
     Videos.update(id, {
       $inc: {
         votesCount: 1
       },
-      $addToSet: {votes: [{
-        userId: Meteor.userId()
-      }]}
+      $addToSet: {votes: {
+        // Automatically deduplicates
+        userId: Meteor.userId(),
+        username: Meteor.user().services.github.username
+      }}
     })
   }
 })
