@@ -102,10 +102,11 @@ VideoForm = React.createClass({
         <div className='input-group'>
           <input
             type='text'
+            name='new-video-url'
             className='form-control'
             ref='textInput'
             required
-            placeholder='Add a video URL' />
+            placeholder='Add a video URL (youtube or vimeo)' />
           <span className='input-group-btn'>
             <button
               type='button'
