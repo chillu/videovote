@@ -31,7 +31,7 @@ App = React.createClass({
     return (
       <div className='container-fluid'>
         <header className='page-header'>
-          <i class="fa fa-television"></i>
+          <i className='logo fa fa-television'></i>
           <h1>Lunch &amp; Learn Videos</h1>
           <p className='lead'>
             Flux. Websockets. PHP7. Lean UX. So many new ideas, so little time!
