@@ -1,8 +1,10 @@
+/* global Meteor, Async */
+
 Videos = new Mongo.Collection('videos');
 
 Meteor.methods({
   'videos/add': (url) => {
-    var response, embedData, video, oembedService, googleService, existing;
+    var response, embedData, video, oembedService, videoDataService, duration, existing;
 
     // oEmbed needs to run on server
     if(!Meteor.isServer) {
@@ -24,7 +26,7 @@ Meteor.methods({
       throw new Meteor.Error('No video found')
     }
 
-    embedData = response.result;
+    embedData = response.result
 
     // Check for duplicates
     if(Videos.findOne({url: embedData.video_url})) {
@@ -32,26 +34,15 @@ Meteor.methods({
     }
 
     // Grab video metadata
-    // TODO Support different services
-    videoId = embedData.video_url.match(/.*\/(.*)/)[1]
-    googleService = Meteor.npmRequire('googleapis')
-    googleResponse = Async.runSync(function(done) {
-      googleService.youtube('v3').videos.list(
-        {
-          auth: Meteor.settings.google.apiKey,
-          part: 'contentDetails',
-          maxResults: 1,
-          id: videoId
-        },
-        function(err, data) {
-          done(err, data)
-        }
-      )
-    })
-    if(googleResponse.error) {
-      throw new Meteor.Error('No video found')
+    videoDataService = VideoDataServiceFactory
+      .createFromProviderName(embedData.provider_name)
+
+    if(!videoDataService) {
+      throw new Meteor.Error('Video cannot be processed')
     }
-    var durationMins = moment.duration(googleResponse.result.items[0].contentDetails.duration).minutes()
+
+    videoId = videoDataService.getIdFromUrl(embedData.video_url)
+    durationMins = videoDataService.getDuration(videoId)
 
     // Insert video
     video = {
@@ -68,7 +59,6 @@ Meteor.methods({
         {
           // A user should really vote for their own addition
           userId: Meteor.userId(),
-          // TODO Figure out how to retrieve "protected" values from user objects on client
           username: Meteor.user().services.github.username
         }
       ]
