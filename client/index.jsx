@@ -167,8 +167,8 @@ VideoItem = React.createClass({
           </h4>
           <p>
             {this.props.video.description}
-            {this.props.video.votes ? 'Voted by: ' : ''}
-            <span className='votes'>{this.props.video.votes ? this.renderVotes() : ''}</span>
+            {this.props.video.votes && this.props.video.votes.length ? 'Voted by: ' : ''}
+            <span className='votes'>{this.props.video.votes && this.props.video.votes.length ? this.renderVotes() : ''}</span>
           </p>
         </div>
         {this.props.user

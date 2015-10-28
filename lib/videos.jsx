@@ -67,7 +67,8 @@ Meteor.methods({
           userId: Meteor.userId(),
           username: Meteor.user().services.github.username
         }
-      ]
+      ],
+      votesCount: 1
     }
     return Videos.insert(video)
   },
@@ -82,19 +83,30 @@ Meteor.methods({
       throw new Meteor.Error('Requires user login')
     }
 
-    if (video.votes && video.votes.filter((vote) => vote.userId === Meteor.userId())) {
-      return
+    if (video.votes && video.votes.filter((vote) => vote.userId === Meteor.userId()).length) {
+      // Remove vote
+      Videos.update(id, {
+        $inc: {
+          votesCount: -1
+        },
+        $pull: {votes: {
+          userId: Meteor.userId()
+        }}
+      })
+    } else {
+      // Add vote
+      Videos.update(id, {
+        $inc: {
+          votesCount: 1
+        },
+        $addToSet: {votes: {
+          // Automatically deduplicates
+          userId: Meteor.userId(),
+          username: Meteor.user().services.github.username
+        }}
+      })
     }
 
-    Videos.update(id, {
-      $inc: {
-        votesCount: 1
-      },
-      $addToSet: {votes: {
-        // Automatically deduplicates
-        userId: Meteor.userId(),
-        username: Meteor.user().services.github.username
-      }}
-    })
+
   }
 })
