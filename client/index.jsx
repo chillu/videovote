@@ -64,7 +64,7 @@ App = React.createClass({
         </div>
         <div className='row padding'>
           <div className='col-md-12'>
-            <ul className='media-list'>
+            <ul className='media-list video-list'>
               {this.renderVideos()}
             </ul>
           </div>
@@ -177,9 +177,10 @@ VideoItem = React.createClass({
           </h4>
           <p>
             {this.props.video.description}
-            <br/>
-            {this.props.video.votes && this.props.video.votes.length ? 'Voted by: ' : ''}
-            <span className='votes'>{this.props.video.votes && this.props.video.votes.length ? this.renderVotes() : ''}</span>
+            <div className='votes'>
+              {this.props.video.votes && this.props.video.votes.length ? 'Voted by: ' : ''}
+              <span className='votes-list'>{this.props.video.votes && this.props.video.votes.length ? this.renderVotes() : ''}</span>
+            </div>
           </p>
         </div>
         {this.props.user

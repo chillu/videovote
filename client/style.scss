@@ -1,9 +1,16 @@
 body {
 	background-color: #333;
-	color: #fff;
+	color: #ccc;
+}
+
+header {
+	h1 {
+		color: #fff;
+	}
 }
 
 .logo {
+	color: #fff;
 	font-size: 36px;
 	float: left;
 	margin-right: 0.5em;
@@ -13,6 +20,12 @@ body {
 	max-width: 800px;
 }
 
+.video-list {
+	a {
+		color: #fff;
+	}
+}
+
 .votes {
 	.user {
 		&:before {
@@ -20,6 +33,9 @@ body {
 		}
 		&:first-child:before {
 			content: normal;
+		}
+		a {
+			color: #ccc;
 		}
 	}
 }
