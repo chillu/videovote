@@ -7,7 +7,7 @@ App = React.createClass({
     var subHandle = Meteor.subscribe('videos')
 
     return {
-      videos: Videos.find({}).fetch(),
+      videos: Videos.find({}, {sort: {votesCount: -1, title: 1}}).fetch(),
       videosLoading: !subHandle.ready(),
       user: Meteor.user()
     }
@@ -22,7 +22,6 @@ App = React.createClass({
         Session.set('errorMessage', err.reason || 'Unknown error')
       }
     })
-  },
   },
 
   renderVideos () {
