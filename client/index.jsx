@@ -115,7 +115,7 @@ VideoForm = React.createClass({
             placeholder='Add a video URL (youtube or vimeo)' />
           <span className='input-group-btn'>
             <button
-              type='button'
+              type='submit'
               className='btn btn-primary ladda-button'
               ref='submitButton'
               data-style='expand-right'
