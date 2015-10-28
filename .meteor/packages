@@ -31,3 +31,4 @@ accounts-github
 service-configuration
 fortawesome:fontawesome
 momentjs:moment
+joshdellay:meteor-ladda-bootstrap

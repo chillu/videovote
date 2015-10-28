@@ -1,4 +1,4 @@
-/* global Meteor, ReactMeteorData, Session, App, Videos, VideoForm, VideoItem, React, UserItem, window */
+/* global Meteor, ReactMeteorData, Session, App, Videos, VideoForm, VideoItem, React, UserItem, window, Ladda */
 
 App = React.createClass({
   mixins: [ReactMeteorData],
@@ -81,14 +81,18 @@ VideoForm = React.createClass({
   },
 
   handleSubmit (event) {
-    var url
+    var url = url = React.findDOMNode(this.refs.textInput).value.trim()
+    var btn = React.findDOMNode(this.refs.submitButton)
+    var ladda = Ladda.create(btn)
 
     event.preventDefault()
     Session.set('isSubmitting', true)
 
-    url = React.findDOMNode(this.refs.textInput).value.trim()
+    ladda.start()
+
     Meteor.call('videos/add', url, (err, res) => {
       Session.set('isSubmitting', false)
+      ladda.stop()
       if (err) {
         window.alert(err.error)
         return
@@ -113,7 +117,9 @@ VideoForm = React.createClass({
           <span className='input-group-btn'>
             <button
               type='button'
-              className='btn btn-primary'
+              className='btn btn-primary ladda-button'
+              ref='submitButton'
+              data-style='expand-right'
               disabled={this.data.isSubmitting ? 'disabled' : ''}
             >
               Add
