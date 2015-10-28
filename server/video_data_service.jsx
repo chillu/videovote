@@ -43,6 +43,9 @@ class YoutubeVideoDataService extends VideoDataService {
     }
     return moment.duration(response.result.items[0].contentDetails.duration).minutes()
   }
+  getIdFromUrl (url) {
+    return url.match(/.*\/(.*)/)[1]
+  }
 }
 
 class VimeoVideoDataService extends VideoDataService {
@@ -70,9 +73,6 @@ class VimeoVideoDataService extends VideoDataService {
       throw new Meteor.Error('No video found')
     }
     return Math.round(response.result.duration / 60)
-  }
-  getIdFromUrl (url) {
-    return url.match(/.*\/(.*)/)[1]
   }
 }
 
