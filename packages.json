@@ -1,4 +1,5 @@
 {
 	"oembed-node": "0.4.0",
-	"googleapis": "2.1.5"
+	"googleapis": "2.1.5",
+	"vimeo": "1.1.4"
 }

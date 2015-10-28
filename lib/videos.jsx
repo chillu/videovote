@@ -47,7 +47,12 @@ Meteor.methods({
       throw new Meteor.Error('Video cannot be processed')
     }
 
-    videoId = videoDataService.getIdFromUrl(embedData.video_url)
+    if (embedData.video_id) {
+      videoId = embedData.video_id
+    } else {
+      videoId = videoDataService.getIdFromUrl(embedData.video_url)
+    }
+
     durationMins = videoDataService.getDuration(videoId)
 
     // Insert video

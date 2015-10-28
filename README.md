@@ -30,16 +30,22 @@ Create a `settings.json` file with the following content:
   "public": {
     "github": {
       "clientId": ""
+    },
+    "vimeo": {
+      "clientId": ""
     }
   },
   "github": {
     "secret": ""
   },
+  "vimeo": {
+    "secret": "",
+    "accessToken": ""
+  },
   "google": {
     "apiKey": ""
   }
 }
-
 ```
 
  * Create a new [Github Developer Application](https://github.com/settings/developers)
@@ -47,6 +53,7 @@ Create a `settings.json` file with the following content:
    as the callback URL.
  * Create a [Google Developer API Key](https://developers.google.com/youtube/registering_an_application#Create_API_Keys)
     as a "server key" with access to the Youtube API
+ * Create a [Vimeo Developer API Key](https://developer.vimeo.com/apps)
 
 ## License
 

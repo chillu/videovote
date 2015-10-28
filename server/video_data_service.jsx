@@ -1,4 +1,4 @@
-/* global Meteor, Async, moment, VideoDataServiceFactory */
+/* global Meteor, Async, moment, VideoDataServiceFactory, Math */
 
 class VideoDataService {
   /**
@@ -43,6 +43,34 @@ class YoutubeVideoDataService extends VideoDataService {
     }
     return moment.duration(response.result.items[0].contentDetails.duration).minutes()
   }
+}
+
+class VimeoVideoDataService extends VideoDataService {
+  constructor () {
+    super()
+    var Vimeo = Meteor.npmRequire('vimeo').Vimeo
+    this._api = new Vimeo(
+      Meteor.settings.public.vimeo.clientId,
+      Meteor.settings.vimeo.secret,
+      Meteor.settings.vimeo.accessToken
+    )
+  }
+  getDuration (id) {
+    var api = this._api
+    var response = Async.runSync(function (done) {
+      api.request(
+        {path: '/videos/' + id},
+        (err, data, status) => {
+          done(err, data)
+        }
+      )
+    })
+
+    if (response.error) {
+      throw new Meteor.Error('No video found')
+    }
+    return Math.round(response.result.duration / 60)
+  }
   getIdFromUrl (url) {
     return url.match(/.*\/(.*)/)[1]
   }
@@ -50,7 +78,8 @@ class YoutubeVideoDataService extends VideoDataService {
 
 VideoDataServiceFactory = {
   services: {
-    YouTube: YoutubeVideoDataService
+    YouTube: YoutubeVideoDataService,
+    Vimeo: VimeoVideoDataService
   },
   /**
    * @param {String}
