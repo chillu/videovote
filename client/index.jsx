@@ -65,6 +65,12 @@ App = React.createClass({
             </ul>
           </div>
         </div>
+        <footer>
+          <small>
+            Created with <a href="http://meteor.com">MeteorJS</a> |
+            Check out the <a href="http://github.com/chillu/videovote">source code</a>
+          </small>
+        </footer>
       </div>
     )
   }
@@ -167,6 +173,7 @@ VideoItem = React.createClass({
           </h4>
           <p>
             {this.props.video.description}
+            <br/>
             {this.props.video.votes && this.props.video.votes.length ? 'Voted by: ' : ''}
             <span className='votes'>{this.props.video.votes && this.props.video.votes.length ? this.renderVotes() : ''}</span>
           </p>
