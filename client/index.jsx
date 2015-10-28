@@ -31,6 +31,10 @@ App = React.createClass({
   },
 
   render () {
+    if (this.data.videosLoading) {
+      return <LoadingSpinner />
+    }
+
     return (
       <div className='container-fluid'>
         <header className='page-header'>
@@ -205,6 +209,22 @@ UserItem = React.createClass({
           {this.props.username}
         </a>
       </span>
+    )
+  }
+})
+
+LoadingSpinner = React.createClass({
+  componentDidMount () {
+    var l = new Spinner({
+      scale: 3,
+      color: '#fff'
+    })
+    l.spin(React.findDOMNode(this.refs.spinner))
+  },
+
+  render () {
+    return (
+      <div className='loading-spinner' ref='spinner' data-size='l'></div>
     )
   }
 })
