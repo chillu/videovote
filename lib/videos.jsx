@@ -111,7 +111,23 @@ Meteor.methods({
         }}
       })
     }
+  },
+  'videos/archive': (id) => {
+    var video = Videos.findOne({_id: id})
 
+    if (!video) {
+      throw new Meteor.Error('Video not found')
+    }
 
+    var user = Meteor.user()
+    if (!user || !user.admin) {
+      throw new Meteor.Error('Requires admin login')
+    }
+
+    Videos.update(id, {
+      $set: {
+        archived: true
+      }
+    })
   }
 })

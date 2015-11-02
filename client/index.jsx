@@ -155,6 +155,16 @@ VideoItem = React.createClass({
       }
     })
   },
+  handleArchive (event) {
+    event.preventDefault()
+
+    Meteor.call('videos/archive', this.props.video._id, (err, res) => {
+      if (err) {
+        window.alert(err.error)
+        return
+      }
+    })
+  },
   renderVotes () {
     var votes = this.props.video.votes
     if (votes) {
@@ -190,6 +200,11 @@ VideoItem = React.createClass({
             </button>
           </form>
           : ''
+        }
+        {this.props.user && this.props.user.admin &&
+          <button type='button' className='btn btn-warning btn-xs' onClick={this.handleArchive}>
+            Archive
+          </button>
         }
       </li>
     )
