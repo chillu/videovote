@@ -1,7 +1,10 @@
 /* global Meteor, ServiceConfiguration, Videos */
 
 Meteor.publish('videos', function () {
-  return Videos.find({archived: {$ne: true}}, {sort: {votesCount: -1, title: 1}})
+  return Videos.find(
+    {archived: {$ne: true}},
+    {sort: {votesCount: -1, title: 1}}
+  )
 })
 
 Meteor.publish('userData', function () {

@@ -1,4 +1,4 @@
-/* global Meteor, ReactMeteorData, Session, App, Videos, VideoForm, VideoItem, React, UserItem, window, Ladda */
+/* global Meteor, ReactMeteorData, Session, App, Videos, VideoForm, VideoListItem, React, UserItem, window, Ladda */
 
 App = React.createClass({
   mixins: [ReactMeteorData],
@@ -21,12 +21,6 @@ App = React.createClass({
       if (err) {
         Session.set('errorMessage', err.reason || 'Unknown error')
       }
-    })
-  },
-
-  renderVideos () {
-    return this.data.videos.map((video) => {
-      return <VideoItem key={video._id} video={video} user={this.data.user}/>
     })
   },
 
@@ -62,13 +56,7 @@ App = React.createClass({
             }
           </div>
         </div>
-        <div className='row padding'>
-          <div className='col-md-12'>
-            <ul className='media-list video-list'>
-              {this.renderVideos()}
-            </ul>
-          </div>
-        </div>
+        <VideoList videos={this.data.videos} user={this.data.user} />
         <footer>
           <small>
             Created with <a href="http://meteor.com">MeteorJS</a> |
@@ -140,7 +128,66 @@ VideoForm = React.createClass({
   }
 })
 
-VideoItem = React.createClass({
+VideoList = React.createClass({
+  propTypes: {
+    videos: React.PropTypes.object.isRequired,
+    user: React.PropTypes.object.isRequired
+  },
+  getInitialState () {
+    return {sort: 'recent'}
+  },
+  handleSort (event) {
+    event.preventDefault()
+
+    this.setState({sort: event.target.value})
+  },
+  renderVideos () {
+    var sort = this.state.sort
+
+    return this.props.videos
+      .sort((a, b) => {
+        if (sort === 'recent') {
+          return a.createdAt < b.createdAt ? 1 : -1
+        } else {
+          return a.votesCount < b.votesCount ? 1 : -1
+        }
+      })
+      .map((video) => {
+        return <VideoListItem key={video._id} video={video} user={this.props.user}/>
+      })
+  },
+  render () {
+    var btnTitleRecent = (this.state.sort === 'recent') ? 'recent' : <strong>recent</strong>
+    var btnTitleVotes = (this.state.sort === 'votes') ? 'votes' : <strong>votes</strong>
+
+    return (
+      <div>
+        <div className='row padding sort-holder'>
+          <div className='col-md-12'>
+            Sort by:
+            &nbsp;
+            <button value='recent' className='btn btn-xs btn-link' onClick={this.handleSort}>
+              {btnTitleRecent}
+            </button>
+            &nbsp;|&nbsp;
+            <button value='votes' className='btn btn-xs btn-link' onClick={this.handleSort}>
+              {btnTitleVotes}
+            </button>
+          </div>
+        </div>
+        <div className='row padding'>
+          <div className='col-md-12'>
+            <ul className='media-list video-list'>
+              {this.renderVideos()}
+            </ul>
+          </div>
+        </div>
+      </div>
+    )
+  }
+})
+
+VideoListItem = React.createClass({
   propTypes: {
     video: React.PropTypes.object.isRequired,
     user: React.PropTypes.object.isRequired
