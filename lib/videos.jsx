@@ -57,6 +57,7 @@ Meteor.methods({
 
     // Insert video
     video = {
+      createdAt: Date.now(),
       url: embedData.video_url,
       thumbnailUrl: embedData.thumbnail_url,
       thumbnailWidth: embedData.thumbnail_width,
