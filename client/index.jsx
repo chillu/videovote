@@ -157,8 +157,8 @@ VideoList = React.createClass({
       })
   },
   render () {
-    var btnTitleRecent = (this.state.sort === 'recent') ? 'recent' : <strong>recent</strong>
-    var btnTitleVotes = (this.state.sort === 'votes') ? 'votes' : <strong>votes</strong>
+    var btnTitleRecent = (this.state.sort === 'recent') ? <strong>recent</strong> : 'recent'
+    var btnTitleVotes = (this.state.sort === 'votes') ? <strong>votes</strong> : 'votes'
 
     return (
       <div>
@@ -166,11 +166,11 @@ VideoList = React.createClass({
           <div className='col-md-12'>
             Sort by:
             &nbsp;
-            <button value='recent' className='btn btn-xs btn-link' onClick={this.handleSort}>
+            <button value='recent' className='btn btn-xs btn-default' onClick={this.handleSort}>
               {btnTitleRecent}
             </button>
             &nbsp;|&nbsp;
-            <button value='votes' className='btn btn-xs btn-link' onClick={this.handleSort}>
+            <button value='votes' className='btn btn-xs btn-default' onClick={this.handleSort}>
               {btnTitleVotes}
             </button>
           </div>
