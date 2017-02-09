@@ -7,6 +7,8 @@ via the oEmbed protocol. By authenticating via Github, users can also vote on vi
 The use case for this app is company-internal "lunch and learn" sessions,
 where a group of devs get together to watch interesting conference talks.
 
+See it in action on [http://videovote.chillu.com](http://videovote.chillu.com).
+
 ## Installation
 
 The app requires the [MeteorJS](https://www.meteor.com/) framework. Install it with:
