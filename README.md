@@ -7,7 +7,10 @@ via the oEmbed protocol. By authenticating via Github, users can also vote on vi
 The use case for this app is company-internal "lunch and learn" sessions,
 where a group of devs get together to watch interesting conference talks.
 
-See it in action on [http://videovote.chillu.com](http://videovote.chillu.com).
+This app has been actively used at SilverStripe Ltd. for two years
+by dozens of staff members. It has now been shut down due to hosting complexities.
+
+![Preview of the interface](preview.png)
 
 ## Installation
 
